@@ -24,18 +24,18 @@ export function fetchCatByBreed(breedId) {
     });
 }
 
-// Головна функція, яка викликається при виборі породи в селекті
-function handleBreedSelection() {
-  const breedSelect = document.querySelector(".breed-select");
+const breedSelect = document.querySelector(".breed-select");
   const catInfoDiv = document.querySelector(".cat-info");
   const loader = document.querySelector(".loader");
-  const error = document.querySelector(".error");
+  const errorEl = document.querySelector(".error");
 
-  const selectedBreedId = breedSelect.value;
+// Головна функція, яка викликається при виборі породи в селекті
+function handleBreedSelection() {
+    const selectedBreedId = breedSelect.value;
 
   // Показуємо завантажувач
   loader.style.display = "block";
-  error.style.display = "none";
+  errorEl.style.display = "none";
 
   // Отримуємо інформацію про кота за породою
   fetchCatByBreed(selectedBreedId)
@@ -54,12 +54,12 @@ function handleBreedSelection() {
     .catch((error) => {
       // Приховуємо завантажувач та виводимо повідомлення про помилку
       loader.style.display = "none";
-      error.style.display = "block";
+      errorEl.style.display = "block";
     });
 }
 
 // Отримуємо селект-елемент для вибору породи
-const breedSelect = document.querySelector(".breed-select");
+
 
 // Додаємо обробник події для вибору породи
 breedSelect.addEventListener("change", handleBreedSelection);
@@ -69,7 +69,12 @@ fetchBreeds()
   .then((breeds) => {
     // Наповнюємо селект-елемент опціями
     breedSelect.innerHTML = breeds.map((breed) => `<option value="${breed.id}">${breed.name}</option>`).join("");
+    breedSelect.classList.remove("is-hidden");
   })
-  .catch((error) => {
-    console.error("Помилка при завантаженні порід котів:", error);
+  .catch((err) => {
+    alert("Помилка при завантаженні порід котів:");
+
+    errorEl.style.display = "block";
+  }).finally(() => {
+    loader.classList.add("is-hidden");
   });
